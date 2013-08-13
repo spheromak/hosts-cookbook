@@ -20,6 +20,12 @@ def initialize(new_resource, run_context)
   super(new_resource, run_context)
   @hosts_exits = false
   @orig_file = String.new
+  if ::File.exists?("/usr/sbin/nscd")
+    flush_resource = execute "flush nscd hosts cache" do
+      command "/usr/sbin/nscd -i hosts"
+    end
+    new_resource.flush_resource(flush_resource)
+  end
 end
 
 #
